@@ -47,6 +47,7 @@ jobs:
           cache: true
           version: ${{ matrix.vers }}
           arch: ${{ matrix.arch }}
+          aqtversion: '==3.1.19'
 
       # Download and build vcpkg, without installing any port. If content is cached already, it is a no-op.
       - name: Setup vcpkg
