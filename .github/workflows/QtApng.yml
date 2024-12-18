@@ -1,10 +1,11 @@
 name: Build QtApng
 on:
   push:
-    branches: [master]
-  workflow_dispatch:
   pull_request:
-    branches: [master]
+  workflow_dispatch:
+
+env:
+  MACOSX_DEPLOYMENT_TARGET: 10.15
 
 jobs:
   build:
@@ -14,22 +15,27 @@ jobs:
         include:
           - os: ubuntu-20.04
             vers: '5.15.2'
+          - os: ubuntu-latest
+            vers: '6.8.1'
           - os: macos-13
             vers: '5.15.2'
-          - os: windows-2022
+          - os: macos-13
+            vers: '6.8.1'
+            buildArch: 'Universal'
+          - os: windows-2019
             vers: '5.15.2'
             arch: 'win32_msvc2019'
             buildArch: 'X86'
-          - os: windows-2022
-            vers: '6.7.3'
+          - os: windows-2019
+            vers: '5.15.2'
             arch: 'win64_msvc2019_64'
           - os: windows-2022
-            vers: '6.7.3'
-            arch: 'win64_msvc2019_arm64'
+            vers: '6.8.1'
+            arch: 'win64_msvc2022_64'
+          - os: windows-2022
+            vers: '6.8.1'
+            arch: 'win64_msvc2022_arm64_cross_compiled'
             buildArch: 'Arm64'
-          - os: macos-14
-            vers: '6.7.3'
-            buildArch: 'Universal'
 
     steps:
       - uses: actions/checkout@v4
@@ -47,23 +53,7 @@ jobs:
           buildArch: ${{ matrix.buildArch }}
 
       - name: 'Upload Artifact'
-        if: github.ref != 'refs/heads/master'
         uses: actions/upload-artifact@v4
         with:
           name: qtapng-${{ matrix.os }}-${{ matrix.vers }}${{ matrix.arch && format('-{0}', matrix.arch) || '' }}
           path: QtApng/output
-
-      - name: 'Zip Artifact'
-        if: github.ref == 'refs/heads/master'
-        uses: thedoctor0/zip-release@0.7.1
-        with:
-          type: 'zip'
-          path: QtApng/output/
-          filename: "qtapng-${{ matrix.os }}-${{ matrix.vers }}${{ matrix.arch && format('-{0}', matrix.arch) || '' }}.zip"
-
-      - name: 'Upload to continous release'
-        if: github.ref == 'refs/heads/master'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: 'cont'
-          files:  qtapng-*.zip

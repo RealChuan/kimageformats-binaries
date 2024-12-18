@@ -5,10 +5,13 @@ if ([RuntimeInformation]::OSArchitecture -ne [Architecture]::X64) {
 }
 
 $arch =
-    $env:buildArch -eq 'X86' ? 'x64_x86' :
-    $env:buildArch -eq 'Arm64' ? 'x64_arm64' :
-    'x64'
+$env:buildArch -eq 'X86' ? 'x64_x86' :
+$env:buildArch -eq 'Arm64' ? 'x64_arm64' :
+'x64'
 $path = Resolve-Path "${env:ProgramFiles}\Microsoft Visual Studio\*\*\VC\Auxiliary\Build" | Select-Object -ExpandProperty Path
+if (-not $path) {
+    $path = (Resolve-Path "${env:ProgramFiles(x86)}\Microsoft Visual Studio\*\*\VC\Auxiliary\Build").Path
+}
 
 cmd.exe /c "call `"$path\vcvarsall.bat`" $arch && set > %temp%\vcvars.txt"
 
