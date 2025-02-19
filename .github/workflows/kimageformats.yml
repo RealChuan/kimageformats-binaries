@@ -14,14 +14,14 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-22.04
             vers: '5.15.2'
           - os: ubuntu-latest
-            vers: '6.8.1'
+            vers: '6.8.2'
           - os: macos-13
             vers: '5.15.2'
           - os: macos-14
-            vers: '6.8.1'
+            vers: '6.8.2'
             buildArch: 'Universal'
           - os: windows-2019
             vers: '5.15.2'
@@ -31,10 +31,10 @@ jobs:
             vers: '5.15.2'
             arch: 'win64_msvc2019_64'
           - os: windows-2022
-            vers: '6.8.1'
+            vers: '6.8.2'
             arch: 'win64_msvc2022_64'
           - os: windows-2022
-            vers: '6.8.1'
+            vers: '6.8.2'
             arch: 'win64_msvc2022_arm64_cross_compiled'
             buildArch: 'Arm64'
 
@@ -52,7 +52,7 @@ jobs:
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         with:
-          vcpkgGitCommitId: '2dc91c6439568f694052c3fa25859dc78d9ff8e4'
+          vcpkgGitCommitId: 'd504de05dcd7b55df34976be1c824324ec6bca2b'
 
       - name: Build KImageFormats (just one big step for now)
         run: pwsh pwsh/buildkimageformats.ps1
